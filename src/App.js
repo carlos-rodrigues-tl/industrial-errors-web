@@ -5,7 +5,7 @@ function App() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🔧 Assistente Técnico</h1>
+      <h1 style={styles.title}>⚙️ Assistente Técnico Industrial</h1>
 
       {/* MENU */}
       <div style={styles.tabs}>
@@ -60,7 +60,7 @@ function Search() {
         />
 
         <button onClick={handleSearch} style={styles.button}>
-          Buscar
+          <h2 style={{ marginBottom: 10 }}>Buscar erro</h2>
         </button>
       </div>
 
@@ -257,24 +257,39 @@ const styles = {
     padding: 20,
     maxWidth: 600,
     margin: "auto",
-    fontFamily: "Arial",
+    fontFamily: "Arial, sans-serif",
+    minHeight: "100vh",
+    background: "#f1f4f9",
   },
   title: {
     textAlign: "center",
+    fontSize: 28,
+    marginBottom: 20,
+    color: "#1a1a1a",
   },
   tabs: {
     display: "flex",
+    gap: 10,
     marginBottom: 20,
   },
   tab: {
     flex: 1,
-    padding: 10,
+    padding: 12,
+    border: "none",
+    borderRadius: 10,
+    background: "#ffffff",
+    fontWeight: "bold",
+    cursor: "pointer",
   },
   activeTab: {
     flex: 1,
-    padding: 10,
+    padding: 12,
+    border: "none",
+    borderRadius: 10,
     background: "#007bff",
     color: "#fff",
+    fontWeight: "bold",
+    cursor: "pointer",
   },
   searchBox: {
     display: "flex",
@@ -283,25 +298,35 @@ const styles = {
   },
   input: {
     flex: 1,
-    padding: 10,
+    padding: 12,
+    borderRadius: 10,
+    border: "1px solid #ddd",
+    fontSize: 15,
   },
   textarea: {
-    padding: 10,
-    minHeight: 70,
+    padding: 12,
+    minHeight: 80,
+    borderRadius: 10,
+    border: "1px solid #ddd",
+    fontSize: 15,
   },
   button: {
-    padding: 10,
+    padding: 12,
     background: "#007bff",
     color: "#fff",
     border: "none",
+    borderRadius: 10,
+    fontWeight: "bold",
+    cursor: "pointer",
   },
   card: {
-    background: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
+    background: "#ffffff",
+    padding: 18,
+    borderRadius: 14,
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 12,
+    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
   },
 };
 
