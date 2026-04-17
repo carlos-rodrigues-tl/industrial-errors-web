@@ -24,8 +24,8 @@ function App() {
         </button>
 
         <button
-          onClick={() => setTab("Admin")}
-          style={tab === "Admin" ? styles.activeTab : styles.tab}
+          onClick={() => setTab("admin")}
+          style={tab === "admin" ? styles.activeTab : styles.tab}
         >
           🔧 Admin
         </button>
