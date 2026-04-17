@@ -38,7 +38,7 @@ function Search() {
     if (!query) return;
 
     const res = await fetch(
-      `https://industrial-errors-api.onrender.com/search?q=${query}`,
+      `${process.env.REACT_APP_API_URL}/search?q=${query}`,
     );
     const result = await res.json();
 
@@ -106,7 +106,7 @@ function Search() {
 
                 {o.image && (
                   <img
-                    src={`https://industrial-errors-api.onrender.com/${o.image}`}
+                    src={`${process.env.REACT_APP_API_URL}/${o.image}`}
                     alt="ocorrência"
                     style={{
                       width: "100%",
@@ -139,11 +139,11 @@ function Create() {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    fetch("https://industrial-errors-api.onrender.com/machines")
+    fetch(`${process.env.REACT_APP_API_URL}/machines`)
       .then((res) => res.json())
       .then(setMachines);
 
-    fetch("https://industrial-errors-api.onrender.com/errors")
+    fetch(`${process.env.REACT_APP_API_URL}/errors`)
       .then((res) => res.json())
       .then(setErrors);
   }, []);
@@ -154,20 +154,17 @@ function Create() {
       return;
     }
 
-    const res = await fetch(
-      "https://industrial-errors-api.onrender.com/occurrences",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          machineId,
-          errorTypeId,
-          solutionText,
-          worked,
-          notes,
-        }),
-      },
-    );
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/occurrences`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        machineId,
+        errorTypeId,
+        solutionText,
+        worked,
+        notes,
+      }),
+    });
 
     const data = await res.json();
 
@@ -175,13 +172,10 @@ function Create() {
       const formData = new FormData();
       formData.append("image", image);
 
-      await fetch(
-        `https://industrial-errors-api.onrender.com/uploads-api/${data.id}`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+      await fetch(`${process.env.REACT_APP_API_URL}/uploads-api/${data.id}`, {
+        method: "POST",
+        body: formData,
+      });
     }
 
     alert("Salvo ✅");
