@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+console.log(process.env.REACT_APP_API_URL);
 function App() {
   const [tab, setTab] = useState("search");
 
@@ -151,13 +151,34 @@ function Create() {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/machines`)
-      .then((res) => res.json())
-      .then(setMachines);
+    const loadData = async () => {
+      try {
+        const resMachines = await fetch(
+          `${process.env.REACT_APP_API_URL}/machines`,
+        );
 
-    fetch(`${process.env.REACT_APP_API_URL}/errors`)
-      .then((res) => res.json())
-      .then(setErrors);
+        const machinesData = await resMachines.json();
+
+        console.log("machines:", machinesData);
+
+        setMachines(machinesData);
+
+        const resErrors = await fetch(
+          `${process.env.REACT_APP_API_URL}/errors`,
+        );
+
+        const errorsData = await resErrors.json();
+
+        console.log("errors:", errorsData);
+
+        setErrors(errorsData);
+      } catch (error) {
+        console.log(error);
+        alert("Erro ao carregar dados");
+      }
+    };
+
+    loadData();
   }, []);
 
   const handleSubmit = async () => {
@@ -270,17 +291,30 @@ function Admin() {
   const [errorName, setErrorName] = useState("");
 
   const loadDashboard = async () => {
-    const res = await fetch(
-      `${process.env.REACT_APP_API_URL}/admin/dashboard`,
-      {
-        headers: {
-          adminpassword: password,
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/admin/dashboard`,
+        {
+          headers: {
+            adminpassword: password,
+          },
         },
-      },
-    );
+      );
 
-    const result = await res.json();
-    setData(result);
+      const result = await res.json();
+
+      console.log("admin:", result);
+
+      if (!result.success) {
+        alert(result.message || "Senha inválida");
+        return;
+      }
+
+      setData(result);
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao carregar painel");
+    }
   };
 
   const createMachine = async () => {
