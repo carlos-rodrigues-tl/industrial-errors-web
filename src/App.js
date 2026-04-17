@@ -37,12 +37,15 @@ function Search() {
   const handleSearch = async () => {
     if (!query) return;
 
-    const res = await fetch(
-      `${process.env.REACT_APP_API_URL}/search?q=${query}`,
-    );
-    const result = await res.json();
-
-    setData(result);
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/search?q=${query}`,
+      );
+      const result = await res.json();
+      setData(result);
+    } catch (error) {
+      alert("Erro ao buscar");
+    }
   };
 
   return (
@@ -106,7 +109,7 @@ function Search() {
 
                 {o.image && (
                   <img
-                    src={`${process.env.REACT_APP_API_URL}/${o.image}`}
+                    src={`${process.env.REACT_APP_API_URL}${o.image}`}
                     alt="ocorrência"
                     style={{
                       width: "100%",
@@ -180,7 +183,10 @@ function Create() {
 
     alert("Salvo ✅");
 
+    setMachineId("");
+    setErrorTypeId("");
     setSolutionText("");
+    setWorked(true);
     setNotes("");
     setImage(null);
   };
