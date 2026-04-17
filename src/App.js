@@ -22,9 +22,18 @@ function App() {
         >
           ➕ Registrar
         </button>
+
+        <button
+          onClick={() => setTab("Admin")}
+          style={tab === "Admin" ? styles.activeTab : styles.tab}
+        >
+          🔧 Admin
+        </button>
       </div>
 
-      {tab === "search" ? <Search /> : <Create />}
+      {tab === "search" && <Search />}
+      {tab === "create" && <Create />}
+      {tab === "admin" && <Admin />}
     </div>
   );
 }
@@ -60,7 +69,7 @@ function Search() {
         />
 
         <button onClick={handleSearch} style={styles.button}>
-          <h2 style={{ marginBottom: 10 }}>Buscar erro</h2>
+          Buscar erro
         </button>
       </div>
 
@@ -251,6 +260,144 @@ function Create() {
   );
 }
 
+function Admin() {
+  const [password, setPassword] = useState("");
+  const [data, setData] = useState(null);
+
+  const [machineCode, setMachineCode] = useState("");
+  const [machineBrand, setMachineBrand] = useState("");
+
+  const [errorName, setErrorName] = useState("");
+
+  const loadDashboard = async () => {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/admin/dashboard`,
+      {
+        headers: {
+          adminpassword: password,
+        },
+      },
+    );
+
+    const result = await res.json();
+    setData(result);
+  };
+
+  const createMachine = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/admin/machines`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        adminpassword: password,
+      },
+      body: JSON.stringify({
+        code: machineCode,
+        brand: machineBrand,
+      }),
+    });
+
+    alert("Máquina cadastrada");
+    setMachineCode("");
+    setMachineBrand("");
+    loadDashboard();
+  };
+
+  const createError = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/admin/errors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        adminpassword: password,
+      },
+      body: JSON.stringify({
+        name: errorName,
+      }),
+    });
+
+    alert("Erro cadastrado");
+    setErrorName("");
+    loadDashboard();
+  };
+
+  return (
+    <div style={styles.card}>
+      <h2 style={{ textAlign: "center" }}>🔐 Painel Administrativo</h2>
+
+      <input
+        placeholder="Senha admin"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        style={styles.input}
+      />
+
+      <button onClick={loadDashboard} style={styles.button}>
+        Entrar no Painel
+      </button>
+
+      {data?.success && (
+        <>
+          <div style={styles.statsGrid}>
+            <div style={styles.statCard}>
+              <h3>🏭</h3>
+              <p>{data.data.machines}</p>
+              <small>Máquinas</small>
+            </div>
+
+            <div style={styles.statCard}>
+              <h3>⚠️</h3>
+              <p>{data.data.errors}</p>
+              <small>Erros</small>
+            </div>
+
+            <div style={styles.statCard}>
+              <h3>📅</h3>
+              <p>{data.data.occurrences}</p>
+              <small>Ocorrências</small>
+            </div>
+          </div>
+
+          <div style={styles.section}>
+            <h3>🏭 Nova Máquina</h3>
+
+            <input
+              placeholder="Código"
+              value={machineCode}
+              onChange={(e) => setMachineCode(e.target.value)}
+              style={styles.input}
+            />
+
+            <input
+              placeholder="Marca"
+              value={machineBrand}
+              onChange={(e) => setMachineBrand(e.target.value)}
+              style={styles.input}
+            />
+
+            <button onClick={createMachine} style={styles.button}>
+              Salvar Máquina
+            </button>
+          </div>
+
+          <div style={styles.section}>
+            <h3>⚠️ Novo Erro</h3>
+
+            <input
+              placeholder="Nome do erro"
+              value={errorName}
+              onChange={(e) => setErrorName(e.target.value)}
+              style={styles.input}
+            />
+
+            <button onClick={createError} style={styles.button}>
+              Salvar Erro
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // 🎨 ESTILO
 const styles = {
   container: {
@@ -327,6 +474,28 @@ const styles = {
     flexDirection: "column",
     gap: 12,
     boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+  },
+  statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 10,
+    marginTop: 15,
+    marginBottom: 20,
+  },
+
+  statCard: {
+    background: "#ffffff",
+    borderRadius: 14,
+    padding: 15,
+    textAlign: "center",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+  },
+
+  section: {
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
   },
 };
 
