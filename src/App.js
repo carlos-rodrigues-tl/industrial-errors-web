@@ -147,7 +147,6 @@ function Create() {
   const [errorTypeId, setErrorTypeId] = useState("");
   const [solutionText, setSolutionText] = useState("");
   const [worked, setWorked] = useState(true);
-  const [notes, setNotes] = useState("");
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -195,7 +194,6 @@ function Create() {
         errorTypeId,
         solutionText,
         worked,
-        notes,
       }),
     });
 
@@ -217,7 +215,6 @@ function Create() {
     setErrorTypeId("");
     setSolutionText("");
     setWorked(true);
-    setNotes("");
     setImage(null);
   };
 
@@ -264,13 +261,6 @@ function Create() {
         <option value="true">Funcionou</option>
         <option value="false">Não funcionou</option>
       </select>
-
-      <textarea
-        placeholder="Observações"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        style={styles.textarea}
-      />
 
       <input type="file" onChange={(e) => setImage(e.target.files[0])} />
 
